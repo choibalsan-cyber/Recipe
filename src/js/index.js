@@ -2,11 +2,15 @@ import Search from './model/search';
 import { elements, renderLoader, clearLoader } from './view/base';
 import * as searchView from './view/searchView';
 import Recipe from './model/recipe';
+import * as recipeView from './view/recipeView';
+
 /*********
  * Web app төлөв
  * query
  */
+const state = {};
 
+// Хайлтын контроллер
 const controlSearch = async () => {
   // 1. Хайлтын query-г дэлгэцнээс гаргаж авна
   const query = searchView.getSearchInput();
@@ -30,7 +34,6 @@ const controlSearch = async () => {
   }
 };
 
-const state = {};
 elements.searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   controlSearch();
@@ -47,5 +50,31 @@ elements.pagesResult.addEventListener('click', (e) => {
   }
 });
 
-const r = new Recipe(47746);
-r.getRecipe();
+// Жорын контроллер
+const controlRecipe = async () => {
+  // 1. Жорыг ID-г авна
+  let id = window.location.hash.replace('#', '');
+
+  console.log(id);
+  // 2. ID-р recipe обьект үүсгэнэ
+  state.recipe = new Recipe(id);
+
+  // 3. Дэлгэцийг бэлтгэнэ
+  recipeView.clearRecipe();
+  renderLoader(elements.recipeDiv);
+
+  // 4. Жороо татаж авчирна
+  await state.recipe.getRecipe();
+  // 5. Цаг хугацаа болон хэдэн хүний орцыг тооцоолно
+  clearLoader();
+  state.recipe.calcTime();
+  state.recipe.calcHuniiToo();
+
+  // 6. Дэлгэцэнд харуулна
+  recipeView.renderRecipe(state.recipe);
+  console.log(state.recipe);
+};
+
+// hashchange буюу window обьектийн хаяг өөрчлөгдөх бүрт дуудагддаг эвент листенер
+window.addEventListener('hashchange', controlRecipe);
+window.addEventListener('load', controlRecipe);

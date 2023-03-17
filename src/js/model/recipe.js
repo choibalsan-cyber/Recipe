@@ -18,7 +18,13 @@ export default class Recipe {
     this.social_rank = result.social_rank;
     this.source_url = result.source_url;
     this.title = result.title;
-    console.log(this.title);
-    console.log(this.ingredients);
+  }
+
+  calcTime() {
+    this.time = this.ingredients.length * 5;
+  }
+
+  calcHuniiToo() {
+    this.huniiToo = 4;
   }
 }
