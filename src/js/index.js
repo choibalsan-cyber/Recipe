@@ -1,7 +1,7 @@
 import Search from './model/search';
 import { elements, renderLoader, clearLoader } from './view/base';
 import * as searchView from './view/searchView';
-
+import Recipe from './model/recipe';
 /*********
  * Web app төлөв
  * query
@@ -35,3 +35,17 @@ elements.searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   controlSearch();
 });
+
+elements.pagesResult.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-inline');
+  btn;
+
+  if (btn) {
+    const pageN = parseInt(btn.dataset.goto, 10);
+    searchView.clearSearchResultList();
+    searchView.renderRecipes(state.search.result, pageN);
+  }
+});
+
+const r = new Recipe(47746);
+r.getRecipe();
